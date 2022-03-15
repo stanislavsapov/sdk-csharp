@@ -1,0 +1,65 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-and-test-linux:
+    runs-on: ubuntu-latest
+    env:
+        TOKEN_ENV: sandbox
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '2.2.x'
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build the protobuf
+        run: ruby build_proto.rb    
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test
+
+  build-and-test-mac-catalina:
+    runs-on: macos-10.15
+    env:
+        TOKEN_ENV: sandbox
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '2.2.x'
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build the protobuf
+        run: ruby build_proto.rb
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test
+
+  build-and-test-mac-big-sur:
+    runs-on: macos-latest
+    env:
+        TOKEN_ENV: sandbox
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '2.2.x'
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build the protobuf
+        run: ruby build_proto.rb
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test
